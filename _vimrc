@@ -111,9 +111,6 @@ Plug 'drewtempelmeyer/palenight.vim'
 
 call plug#end()
 
-" -- Custom --
-"source C:\Users\hasee\AppData\Local\nvim\scripts\snippetst.vim
-
 
 
 " --- Functions ---
@@ -195,7 +192,7 @@ endfunction
 
 " --- Templates ---
 " Templates for new files. Make sure the template files exist!
-let templatedir = "C:/Users/hasee/AppData/Local/nvim/templates"
+let templatedir = "$VIM/templates"
 augroup templates
     autocmd BufNewFile *.* call LoadTemplate(templatedir)
 augroup END
