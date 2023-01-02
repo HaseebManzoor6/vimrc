@@ -8,6 +8,9 @@ set mouse=a
 " Persist global variables whose names are all caps
 set viminfo=!,'100,<50,s10,h,rA:,rB:
 
+" run command script
+runtime runcmd.vim
+
 " --- Settings ---
 "  Line numbers
 set number
@@ -15,6 +18,11 @@ set number
 set termguicolors
 " Split below by default
 set splitbelow
+" backspace over everything
+set backspace=indent,eol,start
+" search highlighting
+set incsearch
+set hlsearch
 
 augroup new_window_autocfg
     " on startup - hack to fix weird resizing in CMD
@@ -46,10 +54,11 @@ let g:tex_flavor = "latex"
 
 
 " --- Persist light/dark and colorscheme ---
+
 augroup persistcolors
     " load on vim startup
-    autocmd VimEnter * let &background=g:BACKGROUND
-    autocmd VimEnter * execute "colorscheme " . g:COLORSCHEME_NAME
+    autocmd VimEnter * silent let &background=g:BACKGROUND
+    autocmd VimEnter * silent execute "colorscheme " . g:COLORSCHEME_NAME
     " save on exit
     autocmd VimLeavePre * let g:BACKGROUND=&background
     autocmd VimLeavePre * let g:COLORSCHEME_NAME = g:colors_name
@@ -62,6 +71,12 @@ augroup visual_cfg_after_colorschemes
     " Constant is linked to string, boolean, etc literals
     autocmd VimEnter * hi Constant cterm=NONE gui=NONE
 augroup END
+
+
+" statusline script
+"   Note that this should be loaded AFTER setting the colorscheme, as it needs to setup
+"   colors based on the colorscheme
+runtime statusline.vim
 
 
 
@@ -111,88 +126,9 @@ Plug 'drewtempelmeyer/palenight.vim'
 
 call plug#end()
 
-
-
-" --- Functions ---
-
-" -- Statusline Function --
-function UpdateStatusline()
-    " colors:
-    " Try to grab from colorscheme, in file
-    " autoload/myStatusLine/colorscheme.vim
-    execute "call myStatusLine#".g:colors_name."#SetColors()"
-    " Default to monochrome black/white if not given by colorscheme
-    "   Use autoload to provide them.
-    if hlID("StatusName") == 0 " if color doesnt exist
-        hi StatusName guifg=#000000 guibg=#FFFFFF
-    endif
-    if hlID("StatusBar") == 0
-        hi StatusBar guifg=#FFFFFF guibg=#000000
-    endif
-    if hlID("StatusType") == 0
-        hi StatusType guifg=#000000 guibg=#AAAAAA
-    endif
-
-    "let fg1=synIDattr(synIDtrans(hlID("StatusLine")),"fg")
-    "let bg1=synIDattr(synIDtrans(hlID("StatusLine")),"bg")
-    "execute "hi Status1 guifg=".bg1." guibg=".fg1
-
-    " Statusline
-    " color
-    set statusline=%#StatusName#\ 
-    " filename
-    set statusline+=%t\ 
-    " color
-    set statusline+=%#StatusType#
-    " filetype
-    set statusline+=\ %Y\ 
-    " color
-    set statusline+=%#StatusBar#
-    " left align..
-    set statusline+=\ \%=
-    " [row%,col]
-    set statusline+=\[\%p\%%\,\%c\]\ 
-    " line count
-    set statusline+=%L\ Lines\ 
-
-    " make always visible
-    set laststatus=2
-endfunction
-
-" -- Autorun Script :P --
-function Autorun()
-	let ft=&filetype
-
-	" ==# is Case-sensitive compare. == behavior can be changed, keep things explicit.
-	if ft ==# 'python'
-		w
-		T py %
-	elseif ft ==# 'html'
-		w
-		!"C:\Program Files\Mozilla Firefox\firefox.exe" %:p
-	elseif ft ==# 'cpp' || ft ==# 'c' || ft ==# 'make'
-		w
-		T "mingw32-make.exe"
-	elseif ft ==# 'dosbatch'
-        w
-        !%
-    elseif ft ==# 'rust'
-        w
-        T cargo run
-    elseif ft ==# 'plaintex' || ft ==# 'tex'
-        w
-        !pdflatex %:p
-        execute "!" . expand("%:p:r") . ".pdf"
-    else
-        echo "You didn't write a script for this filetype :("
-	endif
-endfunction
-
-
-
 " --- Templates ---
 " Templates for new files. Make sure the template files exist!
-let templatedir = "$VIM/templates"
+let templatedir=$HOME."\\vimfiles\\templates"
 augroup templates
     autocmd BufNewFile *.* call LoadTemplate(templatedir)
 augroup END
