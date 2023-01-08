@@ -5,7 +5,11 @@ set laststatus=2
 
 augroup statusline_setup
     autocmd VimEnter,ColorScheme * call GetSLColors()
-    autocmd BufEnter * call SetSL()
+    if has('nvim')
+        autocmd BufEnter,TermOpen,WinEnter * call SetSL()
+    else
+        autocmd BufEnter,TerminalOpen,WinEnter * call SetSL()
+    endif
     autocmd WinLeave * call SetSLInactive()
 augroup END
 
@@ -92,20 +96,15 @@ function SetSLTerminal()
     setlocal statusline=%#StatusName#\ 
     " filename
     setlocal statusline+=%t\ 
-    " color
-    setlocal statusline+=%#StatusBar#
+    " left align...
+    setlocal statusline+=%=
     " search query
     setlocal statusline+=%{SearchDisplay()}
 endfunction
-
 
 function SetSLTerminalInactive()
     " color
     setlocal statusline=%#StatusLineNC#\ 
     " filename
     setlocal statusline+=%t\ 
-    " color
-    setlocal statusline+=%#StatusBar#
-    " search query
-    setlocal statusline+=%{SearchDisplay()}
 endfunction

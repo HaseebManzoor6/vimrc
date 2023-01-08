@@ -92,7 +92,11 @@ command Here :cd %:p:h
 " -nargs=* => any # of args
 " command -nargs=* T :sp res 15 term <args>
 " -complete=file_in_path => tab autocompletion type
-command -nargs=* -complete=file_in_path T :term <args>
+if has('nvim')
+    command -nargs=* -complete=file_in_path T :sp|term <args>
+else
+    command -nargs=* -complete=file_in_path T :term <args>
+endif
 
 " Clear search
 command CL :let @/=""
@@ -115,16 +119,18 @@ command P :call Autorun()
 " --- Plugins ---
 
 "  -- Vim-Plug --
-call plug#begin()
+if exists('plug#begin')
+    call plug#begin()
 
-" -- language support --
-" Rust syntax highlighting
-Plug 'rust-lang/rust.vim'
+    " -- language support --
+    " Rust syntax highlighting
+    Plug 'rust-lang/rust.vim'
 
-" -- Themes --
-Plug 'drewtempelmeyer/palenight.vim'
+    " -- Themes --
+    Plug 'drewtempelmeyer/palenight.vim'
 
-call plug#end()
+    call plug#end()
+endif
 
 " --- Templates ---
 " Templates for new files. Make sure the template files exist!

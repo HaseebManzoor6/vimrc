@@ -1,5 +1,15 @@
 .netrwhist
 .netrwhist~
-colors
-plugged
 *.swp
+
+colors
+compiler
+doc
+ftdetect
+ftplugin
+indent
+keymap
+plugged
+plugin
+syntax
+templates
