@@ -58,6 +58,8 @@ function SetSLFile()
     setlocal statusline=%#StatusName#\ 
     " filename
     setlocal statusline+=%t\ 
+    " modified status
+    setlocal statusline+=%m
     " color
     setlocal statusline+=%#StatusType#
     " filetype
@@ -81,6 +83,8 @@ function SetSLFileInactive()
     setlocal statusline=%#StatusLineNC#\ 
     " filename
     setlocal statusline+=%t\ 
+    " modified status
+    setlocal statusline+=%m
     " filetype
     setlocal statusline+=\ %Y\ 
     " left align..
