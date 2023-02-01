@@ -2,6 +2,10 @@
 
 " set always visible
 set laststatus=2
+" compatibility
+if !has('nvim')
+    set shortmess-=S
+endif
 
 augroup statusline_setup
     autocmd VimEnter,ColorScheme * call GetSLColors()
@@ -14,6 +18,7 @@ augroup statusline_setup
 augroup END
 
 " StatusLine display for search pattern
+"    NeoVim only
 function SearchDisplay()
     if @/==""
         return ""
@@ -69,7 +74,9 @@ function SetSLFile()
     " left align..
     setlocal statusline+=\ \%=
     " search query
-    setlocal statusline+=%{SearchDisplay()}
+    if has('nvim')
+        setlocal statusline+=%{SearchDisplay()}
+    endif
     " [row%,col]
     setlocal statusline+=\[\%p\%%\,\%c\]\ 
     " line count
