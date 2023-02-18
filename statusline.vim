@@ -3,7 +3,7 @@
 " set always visible
 set laststatus=2
 " compatibility
-if !has('nvim')
+if !has('searchcount')
     set shortmess-=S
 endif
 
@@ -18,7 +18,6 @@ augroup statusline_setup
 augroup END
 
 " StatusLine display for search pattern
-"    NeoVim only
 function SearchDisplay()
     if @/==""
         return ""
@@ -74,7 +73,7 @@ function SetSLFile()
     " left align..
     setlocal statusline+=\ \%=
     " search query
-    if has('nvim')
+    if has('searchcount')
         setlocal statusline+=%{SearchDisplay()}
     endif
     " [row%,col]
